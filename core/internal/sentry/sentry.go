@@ -82,6 +82,7 @@ func New(params Params) *Client {
 		Release:          version.Version,
 		Dist:             s.Commit,
 		BeforeSend:       RemoveBottomFrames,
+		Environment:      version.Environment,
 	})
 
 	if err != nil {
@@ -95,6 +96,16 @@ func New(params Params) *Client {
 	}
 
 	return s
+}
+
+func (s *Client) SetUser(id, email, name string) {
+	sentry.ConfigureScope(func(scope *sentry.Scope) {
+		scope.SetUser(sentry.User{
+			ID:    id,
+			Email: email,
+			Name:  name,
+		})
+	})
 }
 
 func (s *Client) shouldCapture(err error) bool {

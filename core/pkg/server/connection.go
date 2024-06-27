@@ -267,7 +267,6 @@ func (nc *Connection) handleInformStart(msg *service.ServerInformStartRequest) {
 	// add attrs from settings:
 	nc.stream.logger.SetTags(observability.Tags{
 		"run_url": nc.stream.settings.GetRunURL(),
-		"entity":  nc.stream.settings.GetEntity(),
 	})
 	// TODO: remove this once we have a better observability setup
 	nc.stream.logger.CaptureInfo("wandb-core", nil)

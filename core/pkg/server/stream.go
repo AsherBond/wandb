@@ -119,6 +119,12 @@ func streamLogger(settings *settings.Settings, sentryClient *sentry.Client) *obs
 		// AddSource: true,
 	}
 
+	sentryClient.SetUser(
+		settings.GetEntity(),
+		settings.GetEmail(),
+		settings.GetUserName(),
+	)
+
 	logger := observability.NewCoreLogger(
 		slog.New(slog.NewJSONHandler(writer, opts)),
 		observability.WithTags(observability.Tags{}),
@@ -127,11 +133,12 @@ func streamLogger(settings *settings.Settings, sentryClient *sentry.Client) *obs
 	)
 	logger.Info("using version", "core version", version.Version)
 	logger.Info("created symlink", "path", targetPath)
+
 	tags := observability.Tags{
-		"run_id":  settings.GetRunID(),
-		"run_url": settings.GetRunURL(),
-		"project": settings.GetProject(),
-		"entity":  settings.GetEntity(),
+		"run_id":    settings.GetRunID(),
+		"run_url":   settings.GetRunURL(),
+		"project":   settings.GetProject(),
+		"sweep_url": settings.GetSweepURL(),
 	}
 	logger.SetTags(tags)
 
